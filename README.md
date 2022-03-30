@@ -1,5 +1,7 @@
 # Open-weather
 
+Ссылка на проект: https://bichurines.github.io/open-weather/
+
 ## Project setup
 ```
 npm install
