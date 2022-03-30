@@ -1,4 +1,4 @@
-# world-weather
+# Open-weather
 
 ## Project setup
 ```
