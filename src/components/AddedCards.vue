@@ -1,7 +1,7 @@
 <template>
   <section class="added-cards">
     <ul v-if="!isLoading" class="card-list">
-      <li v-for="card in cards" :key="card.id" class="card-list__item">
+      <li v-for="card in cards" :key="card.location.tz_id" class="card-list__item">
         <InfoCard :card="card" :onReload="onReload" :onDelete="deleteCard" :isLoading="card.isLoading" />
       </li>
     </ul>
@@ -20,7 +20,7 @@ import InfoCard from '@/components/InfoCard.vue'
 import AddButton from '@/components/AddButton.vue'
 import ModalBox from '@/components/ModalBox.vue'
 import AppLoader from '@/components/AppLoader.vue'
-import api from '@/utils/openWeatherApi'
+import api from '@/utils/weatherApi'
 
 export default {
   data () {
@@ -38,10 +38,18 @@ export default {
     AppLoader
   },
   methods: {
+    getLocalCities () {
+      const cities = localStorage.getItem('cities')
+      return cities && JSON.parse(cities)
+    },
     saveCities (cards) {
-      localStorage.setItem('cities', JSON.stringify([...cards].map(({ name }) => name)))
+      localStorage.setItem('cities', JSON.stringify([...cards].map(({ location }) => location.name)))
     },
     addCard (city) {
+      const cities = this.getLocalCities()
+      if (cities && cities.length && cities.includes(city)) {
+        this.cards = [...this.cards].filter(({ location }) => location.name !== city)
+      }
       return api.getWeather({ q: city })
         .then(res => {
           this.cards = [...this.cards, res]
@@ -51,11 +59,11 @@ export default {
         .catch(err => (this.error = err))
     },
     deleteCard (id) {
-      this.cards = this.cards.filter(({ id: cardId }) => cardId !== id)
+      this.cards = this.cards.filter(({ location }) => location.tz_id !== id)
       this.saveCities(this.cards)
     },
     onReload (city) {
-      const reloadingCardIndx = this.cards.findIndex(({ name }) => city === name)
+      const reloadingCardIndx = this.cards.findIndex(({ location }) => city === location.name)
       this.cards[reloadingCardIndx].isLoading = true
       return api.getWeather({ q: city })
         .then((res) => {
@@ -64,8 +72,7 @@ export default {
     }
   },
   mounted () {
-    let cities = localStorage.getItem('cities')
-    cities = cities && JSON.parse(cities)
+    const cities = this.getLocalCities()
     if (cities && cities.length) {
       const promises = cities.map(city => api.getWeather({ q: city }))
       this.isLoading = true

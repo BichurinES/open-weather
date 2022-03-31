@@ -1,4 +1,4 @@
-import { OPEN_WEATHER_API_OPTIONS } from './constants'
+import { WEATHER_API_OPTIONS } from './constants'
 
 class Api {
   constructor ({ baseUrl, headers, routes, params }) {
@@ -34,5 +34,5 @@ class Api {
   }
 }
 
-const api = new Api(OPEN_WEATHER_API_OPTIONS)
+const api = new Api(WEATHER_API_OPTIONS)
 export default api

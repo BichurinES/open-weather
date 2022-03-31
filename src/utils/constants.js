@@ -1,13 +1,12 @@
-export const OPEN_WEATHER_API_OPTIONS = {
-  baseUrl: ' https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5',
+export const WEATHER_API_OPTIONS = {
+  baseUrl: 'https://api.weatherapi.com/v1',
   routes: {
-    getWeather: '/weather'
+    getWeather: '/current.json'
   },
   params: {
     getWeather: {
-      units: 'metric',
       lang: 'en',
-      APPID: process.env.VUE_APP_API_KEY
+      key: process.env.VUE_APP_API_KEY
     }
   },
   headers: {
@@ -17,51 +16,43 @@ export const OPEN_WEATHER_API_OPTIONS = {
 }
 
 export const DEFAULT_CARD = {
-  coord: {
-    lon: 56.0375,
-    lat: 54.775
+  location: {
+    name: 'Moscow',
+    region: 'Moscow City',
+    country: 'Russia',
+    lat: 55.75,
+    lon: 37.62,
+    tz_id: 'Europe/Moscow',
+    localtime_epoch: 1648698648,
+    localtime: '2022-03-31 6:50'
   },
-  weather: [
-    {
-      id: 600,
-      main: 'Snow',
-      description: 'light snow',
-      icon: '13d'
-    }
-  ],
-  base: 'stations',
-  main: {
-    temp: 0.17,
-    feels_like: -4.91,
-    temp_min: 0.17,
-    temp_max: 0.65,
-    pressure: 1006,
-    humidity: 100,
-    sea_level: 1006,
-    grnd_level: 984
-  },
-  visibility: 2530,
-  wind: {
-    speed: 5.37,
-    deg: 180,
-    gust: 11.29
-  },
-  snow: {
-    '1h': 0.46
-  },
-  clouds: {
-    all: 100
-  },
-  dt: 1648618306,
-  sys: {
-    type: 2,
-    id: 146105,
-    country: 'RU',
-    sunrise: 1648605211,
-    sunset: 1648651621
-  },
-  timezone: 18000,
-  id: 479561,
-  name: 'Moscow',
-  cod: 200
+  current: {
+    last_updated_epoch: 1648698300,
+    last_updated: '2022-03-31 06:45',
+    temp_c: -8.0,
+    temp_f: 17.6,
+    is_day: 1,
+    condition: {
+      text: 'Sunny',
+      icon: '//cdn.weatherapi.com/weather/64x64/day/113.png',
+      code: 1000
+    },
+    wind_mph: 0.0,
+    wind_kph: 0.0,
+    wind_degree: 153,
+    wind_dir: 'SSE',
+    pressure_mb: 1009.0,
+    pressure_in: 29.8,
+    precip_mm: 0.0,
+    precip_in: 0.0,
+    humidity: 73,
+    cloud: 0,
+    feelslike_c: -10.5,
+    feelslike_f: 13.2,
+    vis_km: 10.0,
+    vis_miles: 6.0,
+    uv: 1.0,
+    gust_mph: 5.8,
+    gust_kph: 9.4
+  }
 }

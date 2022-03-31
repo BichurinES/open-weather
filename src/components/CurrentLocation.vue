@@ -16,7 +16,7 @@
 <script>
 import InfoCard from '@/components/InfoCard.vue'
 import DefaultCard from '@/components/DefaultCard.vue'
-import api from '@/utils/openWeatherApi'
+import api from '@/utils/weatherApi'
 
 export default {
   data () {
@@ -36,7 +36,8 @@ export default {
       this.isLoading = true
       navigator.geolocation.getCurrentPosition(
         ({ coords }) => {
-          api.getWeather({ lat: coords.latitude, lon: coords.longitude })
+          const { latitude, longitude } = coords
+          api.getWeather({ q: `${latitude},${longitude}` })
             .then(res => (this.currentPosition = res))
             .catch(err => (this.error = err))
             .finally(() => (this.isLoading = false))

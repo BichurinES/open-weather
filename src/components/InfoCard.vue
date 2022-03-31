@@ -1,12 +1,12 @@
 <template>
   <div class="card" :class="{ card_loading: isLoading }">
     <div class="card__content" :class="{ card__content_loading: isLoading }">
-      <h2 class="title">{{ `${card.name}${isCurrentPosition ? `, ${country}` : ''}` }}</h2>
+      <h2 class="title">{{ `${card.location.name}${isCurrentPosition ? `, ${country}` : ''}` }}</h2>
       <p class="card__subtitle">{{ isCurrentPosition ? 'Your current location' : country}}</p>
       <table class="table card__table">
         <tr class="table__row">
           <th scope="row" class="table__header">Weather</th>
-          <td class="table__data">{{ card.weather[0].main }}</td>
+          <td class="table__data">{{ card.current.condition.text }}</td>
         </tr>
         <tr class="table__row">
           <th scope="row" class="table__header">Temperature</th>
@@ -14,7 +14,7 @@
         </tr>
         <tr class="table__row">
           <th scope="row" class="table__header">Humidity</th>
-          <td class="table__data">{{ card.main.humidity }} %</td>
+          <td class="table__data">{{ card.current.humidity }} %</td>
         </tr>
       </table>
       <p class="card__timestamp">{{ timeFromUpdated }}</p>
@@ -22,7 +22,7 @@
         class="card__controllers"
         :class="{ 'card__controllers_type_current-location': isCurrentPosition }"
       >
-        <AppButton v-if="!isCurrentPosition" text="Remove" :isDisabled="isLoading" :onClick="() => onDelete(card.id)" />
+        <AppButton v-if="!isCurrentPosition" text="Remove" :isDisabled="isLoading" :onClick="() => onDelete(card.location.tz_id)" />
         <AppButton text="Reload" :isDisabled="isLoading" :onClick="onReloadHandler" />
       </footer>
     </div>
@@ -67,21 +67,18 @@ export default {
     AppLoader
   },
   computed: {
-    isRussia () {
-      return this.card.sys.country === 'RU'
-    },
     country () {
-      return (this.isCurrentPosition || !this.isRussia)
-        ? this.card.sys.country
-        : 'Russia'
+      return this.isCurrentPosition
+        ? this.card.location.country.slice(0, 2).toUpperCase()
+        : this.card.location.country
     },
     temp () {
-      return Math.round(this.card.main.temp)
+      return Math.round(this.card.current.temp_c)
     }
   },
   methods: {
     onReloadHandler () {
-      this.onReload(this.card.name)
+      this.onReload(this.card.location.name)
       this.createdAt = moment().format()
       this.timeFromUpdated = moment(this.createdAt).fromNow()
     }
